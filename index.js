@@ -1,33 +1,34 @@
-import "./env.js"
+import "./env.js";
 import express from "express";
 import { Server } from "socket.io";
 import cors from "cors";
 import http from "http";
 
-
 const app = express();
 
-// 1. create server using http.
+// Create server using http.
 const server = http.createServer(app);
 
-// 2. create socket srver.
+// Create Socket.IO server.
 const io = new Server(server, {
     cors: {
-        origin: "*",
+        origin: "*", // Adjust this as needed
         methods: ["GET", "POST"]
     }
 });
 
-// use socket event.
+// Use Socket.IO event.
 io.on("connection", (socket) => {
-    console.log("Connection is established");
+    console.log("Connection established");
 
     socket.on("disconnect", () => {
-        console.log("Connection is Disconnected");
+        console.log("Connection disconnected");
     });
 });
 
-const port = process.env.PORT || 3000; // Default to 3000 if PORT is not defined 
+const port = process.env.PORT || 3000; // Default to 3000 if PORT is not defined
 server.listen(port, () => {
-    console.log("server is listening on PORT 3000")
-})
+    console.log(`Server is listening on PORT ${port}`);
+}).on('error', (err) => {
+    console.error('Error starting server:', err);
+});
