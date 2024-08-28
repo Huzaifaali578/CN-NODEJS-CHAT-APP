@@ -1,30 +1,32 @@
-import "./env.js";
+import "./env.js"
 import express from "express";
 import { Server } from "socket.io";
 import cors from "cors";
 import http from "http";
 import { connect } from "./config.js";
 import { chatModel } from "./chat.schema.js";
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
 
-// CORS Options
+// Resolve __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const corsOptions = {
     origin: 'http://127.0.0.1:5500/client.html'
 };
 
-// Use CORS middleware with Express app
 app.use(cors(corsOptions));
-
-// Create server using http.
-const server = http.createServer(app);
-
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-    res.send('Welcome to the Chat App!');
+    res.sendFile(path.join(__dirname, 'public', 'client.html'));
 });
 
+// Create server using http.
+const server = http.createServer(app);
 
 // Create Socket.IO server.
 const io = new Server(server, {
@@ -33,7 +35,6 @@ const io = new Server(server, {
         methods: ["GET", "POST"]
     }
 });
-
 // Use Socket.IO event.
 io.on("connection", (socket) => {
     console.log("Connection established");
