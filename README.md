@@ -23,5 +23,30 @@
 <li><b>Responsive Design</b>: Works seamlessly across devices of all sizes.</li>
 <li><b>Typing Indicators</b>: See when someone is typing.</li>
 <li><b>Message Timestamps</b>: Each message shows the time and date it was sent.</li>
-
 </ul>
+
+# Demo
+
+# Technologies Used
+<li>Node.js</li>
+<li>Express.js</li>
+<li>Socket.io (for real-time communication)</li>
+<li>MongoDB (for message storage)</li>
+<li>Mongoose (for data modeling)</li>
+<li>JWT (for authentication)</li>
+<li>HTML/CSS/JavaScript (for the frontend)</li>
+
+# Project Structure
+├── public/           # Static files (HTML, CSS, JS)
+├── src/
+│   ├── controllers/  # Express route handlers
+│   ├── models/       # Mongoose models
+│   ├── routes/       # Express routes
+│   ├── middlewares/  # Custom middleware (e.g., auth)
+│   ├── app.js        # Express app setup
+│   └── server.js     # Server entry point
+├── .env              # Environment variables
+├── package.json
+└── README.md
+
+
