@@ -6,4 +6,4 @@ const chatSchema = new mongoose.Schema({
     timestamp: Date
 })
 
-export const chatModel = mongoose.model("Chat", chatSchema);
+export const chatModel = mongoose.model("Chat_uer_message", chatSchema);

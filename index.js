@@ -8,6 +8,14 @@ import { chatModel } from "./chat.schema.js";
 
 const app = express();
 
+// CORS Options
+const corsOptions = {
+    origin: 'http://127.0.0.1:5500/client.html'
+};
+
+// Use CORS middleware with Express app
+app.use(cors(corsOptions));
+
 // Create server using http.
 const server = http.createServer(app);
 
@@ -33,7 +41,7 @@ io.on("connection", (socket) => {
                 socket.emit("load_message", messages);
             })
             .catch(err => {
-                console.error(err);
+                console.error("Error loading messages:", err);
             });
     });
 
@@ -52,13 +60,12 @@ io.on("connection", (socket) => {
         newChat.save()
             .then(() => {
                 // Broadcast the message to all users except the sender
-                socket.broadcast.emit("broadcast_message", userMessage); // Corrected typo here
+                socket.broadcast.emit("broadcast_message", userMessage);
             })
             .catch(err => {
                 console.error("Error saving message:", err);
             });
     });
-    
 
     socket.on("disconnect", () => {
         console.log(`${socket.userName} disconnected`);
