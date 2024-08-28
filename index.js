@@ -19,6 +19,13 @@ app.use(cors(corsOptions));
 // Create server using http.
 const server = http.createServer(app);
 
+app.use(express.static('public'));
+
+app.get('/', (req, res) => {
+    res.send('Welcome to the Chat App!');
+});
+
+
 // Create Socket.IO server.
 const io = new Server(server, {
     cors: {
