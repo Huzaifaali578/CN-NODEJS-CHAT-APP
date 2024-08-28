@@ -1,71 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="client.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="client.css" />
     <title>Chat App</title>
-</head>
-<body>
+  </head>
+  <body>
+      <div id="welcome_message"><h1>Welcome To The Personal Chat App</h1></div>
     <div class="chat-container">
-        <div id="message-list">
-            <!-- Messages will be appended here -->
-        </div>
-        <div class="inputButton">
-            <input type="text" id="message-input" placeholder="Type a message...">
-            <button id="send-message">Send</button>
-        </div>
+      <h1 id="username"></h1>
+      <div id="message-list">
+        <!-- Messages will be appended here -->
+      </div>
+      <div class="inputButton">
+        <input type="text" id="message-input" placeholder="Type a message..." />
+        <button id="send-message">Send</button>
+      </div>
     </div>
     <script src="http://localhost:3000/socket.io/socket.io.js"></script>
     <script>
-        // Connect to the server
-        const socket = io.connect("http://localhost:3000");
-    
-        // Get elements
-        const messageInput = document.getElementById("message-input");
-        const messageList = document.getElementById("message-list");
-        const sendButton = document.getElementById("send-message");
-    
-        // Send message to the server and append it to the chat
-        sendButton.addEventListener("click", function() {
-            const message = messageInput.value.trim(); // Trim to remove any leading/trailing spaces
-    
-            if (message) {
-                socket.emit("new_message", message);
-    
-                // Create a new message element for the sender
-                const messageElement = document.createElement("div");
-                messageElement.innerText = message;
-    
-                // Apply a CSS class to the message element for styling
-                messageElement.classList.add("message", "sent");
-    
-                // Append the message element to the message list
-                messageList.appendChild(messageElement);
-    
-                // Scroll to the bottom of the message list after adding the new message
-                messageList.scrollTop = messageList.scrollHeight;
-    
-                messageInput.value = ""; // Clear the input field
-            }
+      // Connect to the server
+      const socket = io.connect("http://localhost:3000");
+      const userName = prompt("Enter your Name");
+      socket.emit("join", userName);
+
+      const user = document.getElementById("username");
+      user.innerText = userName;
+
+      // Get elements
+      const messageInput = document.getElementById("message-input");
+      const messageList = document.getElementById("message-list");
+      const sendButton = document.getElementById("send-message");
+
+      // Send message to the server and append it to the chat
+      sendButton.addEventListener("click", function () {
+        const message = messageInput.value.trim();
+
+        if (message) {
+          socket.emit("new_message", message);
+
+          // Create a new message element for the sender
+          const messageElement = document.createElement("div");
+          messageElement.innerText = message;
+
+          // Apply a CSS class to the message element for styling
+          messageElement.classList.add("message", "sent");
+
+          // Append the message element to the message list
+          messageList.appendChild(messageElement);
+
+          // Scroll to the bottom of the message list after adding the new message
+          messageList.scrollTop = messageList.scrollHeight;
+
+          messageInput.value = "";
+        }
+      });
+
+      function formatTimestamp(timestamp) {
+        const date = new Date(timestamp);
+        const formattedTime = date.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
         });
-    
-        // Listen for broadcasted messages and append them to the chat
-        socket.on("braodcast_message", (message) => {
-            // Create a new message element for each received message
-            const messageElement = document.createElement("div");
-            messageElement.innerText = message;
-    
-            // Apply a CSS class to the message element for styling
-            messageElement.classList.add("message");
-    
-            // Append the message element to the message list
-            messageList.appendChild(messageElement);
-    
-            // Scroll to the bottom of the message list after adding the new message
-            messageList.scrollTop = messageList.scrollHeight;
+        const formattedDate = date.toLocaleDateString([], {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
         });
+        return `${formattedDate} ${formattedTime}`;
+      }
+
+      socket.on("load_message", (messages) => {
+        messages.forEach((message) => {
+          const messageElement = document.createElement("div");
+          messageElement.innerHTML = `<strong>${message.userName}</strong>: ${
+            message.message
+          }<br><small>${formatTimestamp(message.timestamp)}</small>`;
+
+          if (message.userName === userName) {
+            messageElement.classList.add("message", "sent");
+          } else {
+            messageElement.classList.add("message", "received");
+          }
+
+          messageList.appendChild(messageElement);
+          messageList.scrollTop = messageList.scrollHeight;
+        });
+      });
+
+      socket.on("broadcast_message", (userMessage) => {
+        const messageElement = document.createElement("div");
+        messageElement.innerHTML = `<strong>${userMessage.userName}</strong>: ${
+          userMessage.message
+        }<br><small>${formatTimestamp(new Date())}</small>`;
+
+        if (userMessage.userName === userName) {
+          messageElement.classList.add("message", "sent");
+        } else {
+          messageElement.classList.add("message", "received");
+        }
+
+        messageList.appendChild(messageElement);
+        messageList.scrollTop = messageList.scrollHeight;
+      });
     </script>
-    
-</body>
+  </body>
 </html>

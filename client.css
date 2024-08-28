@@ -8,6 +8,17 @@ body {
     margin: 0;
 }
 
+#welcome_message {
+    padding: 10px;
+    background-color: #3a3a3a;
+    color: #fff;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    font-size: 18px;
+    position: relative;
+    margin-bottom: auto;
+}
+
 .chat-container {
     width: 100%;
     max-width: 500px;
@@ -17,14 +28,16 @@ body {
     display: flex;
     flex-direction: column;
     height: 80vh;
-    overflow: hidden; /* Ensures no overflow issues */
+    overflow: hidden;
+    margin-top: 53px;
+    position: absolute;
 }
 
 #message-list {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end; /* Align messages at the bottom */
+    justify-content: flex-end;
     padding: 10px;
     overflow-y: auto;
     background-color: #3a3a3a;
@@ -67,18 +80,58 @@ body {
 }
 
 .message {
-    background-color: #e1ffc7;
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 8px;
     font-size: 14px;
     max-width: 80%;
     word-wrap: break-word;
-    align-self: flex-start;
-    color: #333;
+    position: relative; /* Needed for positioning the timestamp */
 }
 
 .message.sent {
     background-color: #d1f7c4;
     align-self: flex-end;
+}
+
+.message.received {
+    background-color: #ffffff;
+    align-self: flex-start;
+}
+
+.message .timestamp {
+    font-size: 12px;
+    color: #888;
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+}
+
+.message.received .timestamp {
+    left: 10px;
+    right: auto;
+}
+
+#username {
+    color: #28a745;
+    text-align: center;
+    font-size: xx-large;
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+    .chat-container {
+        height: 90vh;
+        max-width: 100%;
+    }
+
+    #message-input {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    #send-message {
+        padding: 10px;
+        font-size: 14px;
+    }
 }
