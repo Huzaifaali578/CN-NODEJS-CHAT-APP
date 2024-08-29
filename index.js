@@ -15,7 +15,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const corsOptions = {
-    origin: 'http://127.0.0.1:5500/client.html'
+    origin: 'https://cn-nodejs-chat-app.onrender.com'
 };
 
 app.use(cors(corsOptions));
